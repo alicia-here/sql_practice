@@ -1,0 +1,16 @@
+## 3월에 태어난 여성 회원 목록 출력하기 (Lv.2/SELECT)
+
+## DATE_FORMT(날짜, 포맷)
+## MONTH(): 월 뽑아내기
+## IS NOT NULL : NULL이 아니도록 조건 걸어주기 
+
+SELECT 
+    MEMBER_ID, 
+    MEMBER_NAME, 
+    GENDER, 
+    DATE_FORMAT(DATE_OF_BIRTH, '%Y-%m-%d') AS DATE_OF_BIRTH
+FROM MEMBER_PROFILE
+WHERE (MONTH(DATE_OF_BIRTH) = 3)
+AND GENDER = 'W'
+AND(TLNO IS NOT NULL)
+ORDER BY MEMBER_ID ASC;
