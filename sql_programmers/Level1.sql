@@ -1,32 +1,3 @@
-## 1. 평균 일일 대여 요금 구하기 (Lv.1/SELECT)
-
-## AVG() : 평균 출력 함수 
-## ROUND(): 반올림 함수
-
-SELECT ROUND(AVG(DAILY_FEE),0) AS AVERAGE_FEE
-FROM CAR_RENTAL_COMPANY_CAR
-WHERE CAR_TYPE = 'SUV';
-
-
-
-
-
-## 과일로 만든 아이스크림 고르기 (Lv.1/SELECT)
-
-## JOIN(): 테이블 조인 (MySQL default는 INNER JOIN)
-## TIP: AND 조건은 ()로 잘 묶어주기
-## ORDER BY: 오름차순 ASC, 내림차순 DESC 
-
-SELECT fh.FLAVOR
-FROM FIRST_HALF fh LEFT JOIN ICECREAM_INFO ii
-ON fh.FLAVOR = ii.FLAVOR
-WHERE (fh.TOTAL_ORDER >= 3000) AND (ii.INGREDIENT_TYPE = 'fruit_based')
-ORDER BY fh.TOTAL_ORDER DESC;
-
-
-
-
-
 ## 특정 형질을 가지는 대장균 찾기 (Lv.1/SELECT)
 
 ## 비트연산자
@@ -41,9 +12,7 @@ FROM ECOLI_DATA
 WHERE (GENOTYPE & 2) != 2
 AND ((GENOTYPE & 4) = 4 OR (GENOTYPE & 1) = 1);
 
-
-
-
+------------------------------------------------------------------------------------------------------
 
 ## 가장 큰 물고기 10마리 구하기 (Lv.1/SELECT)
 
@@ -54,9 +23,7 @@ WHERE LENGTH IS NOT NULL
 ORDER BY LENGTH DESC, ID ASC
 LIMIT 10;
 
-
-
-
+------------------------------------------------------------------------------------------------------
 
 ## 특정 물고기를 잡은 총 수 구하기 (Lv.1/SELECT)
 
@@ -66,3 +33,54 @@ SELECT COUNT(*) AS FISH_COUNT FROM FISH_INFO fi
 LEFT JOIN FISH_NAME_INFO fni
 ON fi.FISH_TYPE = fni.FISH_TYPE
 WHERE FISH_NAME IN ('BASS', 'SNAPPER');
+
+------------------------------------------------------------------------------------------------------
+
+## 한 해에 잡은 물고기 수 구하기(Lv.1/String,Date)
+
+## YEAR(): 년도 추출 
+
+SELECT COUNT(*) AS FISH_COUNT
+FROM FISH_INFO
+WHERE YEAR(TIME) = 2021;
+
+------------------------------------------------------------------------------------------------------
+
+## 분기별 분화된 대장균의 개체 수 구하기 (Lv.1/String,Date)
+
+## QUARTER (): 4분기로 구분하여 값을 내는 함수(3,6,9,12월)
+## CONCAT() : 문자열 결합
+
+SELECT CONCAT(QUARTER(DIFFERENTIATION_DATE), 'Q') AS QUARTER,
+COUNT(*) AS ECOLI_COUNT
+FROM ECOLI_DATA 
+GROUP BY QUARTER
+ORDER BY QUARTER;
+
+# 오답노트 
+## string concat할 때는 꼭 '' 적어주기
+
+------------------------------------------------------------------------------------------------------
+
+## 평균 일일 대여 요금 구하기 (Lv.1/SELECT)
+
+## AVG() : 평균 출력 함수 
+## ROUND(): 반올림 함수
+
+SELECT ROUND(AVG(DAILY_FEE),0) AS AVERAGE_FEE
+FROM CAR_RENTAL_COMPANY_CAR
+WHERE CAR_TYPE = 'SUV';
+
+------------------------------------------------------------------------------------------------------
+
+## 과일로 만든 아이스크림 고르기 (Lv.1/SELECT)
+
+## JOIN(): 테이블 조인 (MySQL default는 INNER JOIN)
+## TIP: AND 조건은 ()로 잘 묶어주기
+## ORDER BY: 오름차순 ASC, 내림차순 DESC 
+
+SELECT fh.FLAVOR
+FROM FIRST_HALF fh LEFT JOIN ICECREAM_INFO ii
+ON fh.FLAVOR = ii.FLAVOR
+WHERE (fh.TOTAL_ORDER >= 3000) AND (ii.INGREDIENT_TYPE = 'fruit_based')
+ORDER BY fh.TOTAL_ORDER DESC;
