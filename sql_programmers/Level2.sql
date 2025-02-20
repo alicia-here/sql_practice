@@ -66,3 +66,17 @@ END AS (값을 넣을 컬럼명)
 FROM TABLE;
 
 ------------------------------------------------------------------------------------------------------
+
+## 월별 잡은 물고기 수 구하기(Lv.2/ GROUP BY)
+
+## MONTH(): DATE, DATETIME, TIMESTAMP와 같은 시간 데이터 타입에서 월을 추출해주는 함수
+
+SELECT 
+    COUNT(*) AS FISH_COUNT,
+    MONTH(TIME) AS MONTH
+FROM 
+    FISH_INFO
+GROUP BY 
+    MONTH
+ORDER BY 
+    MONTH ASC;
