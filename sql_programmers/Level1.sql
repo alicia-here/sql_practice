@@ -143,3 +143,38 @@ WHERE
      OPTIONS LIKE '%네비게이션%'
 ORDER BY 
     CAR_ID DESC;
+
+------------------------------------------------------------------------------------------------------
+
+## 13. 가장 비싼 상품 구하기 (Lv.1 / SUM, MAX, MIN)
+
+## MAX(): 최대값을 구하는 함수
+
+SELECT 
+    MAX(PRICE) AS MAX_PRICE
+FROM 
+    PRODUCT;
+
+------------------------------------------------------------------------------------------------------
+
+## 14. 조건에 부합하는 중고거래 댓글 조회하기 (Lv.1 / SELECT)
+
+## DATE_FORMAT(날짜 데이터, "format"): 날짜를 특정 포맷으로 변환하는 함수 
+
+SELECT 
+    ugb.TITLE,
+    ugb.BOARD_ID, 
+    ugr.REPLY_ID,
+    ugr.WRITER_ID, 
+    ugr.CONTENTS,
+    DATE_FORMAT(ugr.CREATED_DATE, "%Y-%m-%d") AS CREATED_DATE
+FROM 
+    USED_GOODS_REPLY ugr
+LEFT JOIN 
+    USED_GOODS_BOARD ugb
+ON 
+    ugr.BOARD_ID = ugb.BOARD_ID
+WHERE 
+    (YEAR(ugb.CREATED_DATE) = 2022) AND (MONTH(ugb.CREATED_DATE) = 10)
+ORDER BY 
+    ugr.CREATED_DATE ASC, ugb.TITLE ASC;
