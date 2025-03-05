@@ -98,3 +98,30 @@ GROUP BY
     YEAR(YM)
 ORDER BY 
     YEAR ASC;
+
+------------------------------------------------------------------------------------------------------
+
+## 6. 루시와 엘라 찾기 (Lv.2 / String, Date)
+
+SELECT 
+    ANIMAL_ID,
+    NAME,
+    SEX_UPON_INTAKE
+FROM 
+    ANIMAL_INS
+WHERE
+    NAME IN ('Lucy', 'Ella', 'Pickle', 'Rogan', 'Sabrina', 'Mitty');
+
+------------------------------------------------------------------------------------------------------
+
+## 7. 고양이와 개는 몇 마리 있을까 (Lv.2 / GROUP BY)
+
+SELECT 
+    ANIMAL_TYPE,
+    COUNT(*) AS count
+FROM 
+    ANIMAL_INS
+GROUP BY 
+    ANIMAL_TYPE
+ORDER BY 
+    ANIMAL_TYPE ASC;
