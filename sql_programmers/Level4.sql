@@ -28,3 +28,25 @@ WHERE PRICE IN(
     GROUP BY CATEGORY) 
 AND CATEGORY IN ('과자', '국', '김치', '식용유')
 ORDER BY MAX_PRICE DESC;
+
+-------------------------------------------------------------------------------
+
+## 3. FRONTEND 개발자 찾기 (Lv.4 / JOIN)
+
+## 다 더해서 비트 마스킹 하는 식으로 풀이함.
+
+SELECT 
+    D.ID, 
+    D.EMAIL, 
+    D.FIRST_NAME, 
+    D.LAST_NAME 
+FROM 
+    DEVELOPERS D
+WHERE 
+    D.SKILL_CODE & (
+        SELECT SUM(SC.CODE) 
+        FROM SKILLCODES SC 
+        WHERE SC.CATEGORY = 'Front End'
+    ) > 0
+ORDER BY 
+    D.ID ASC;

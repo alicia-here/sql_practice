@@ -208,3 +208,29 @@ ORDER BY
 
 ------------------------------------------------------------------------------------------------------
 
+## 조건에 맞는 사원 정보 조회하기 (Lv.1 / GROUP BY)
+
+WITH FIND_TOP AS (SELECT 
+                    HG.EMP_NO,
+                    HG.SCORE,
+                    HG.YEAR,
+                    HE.EMP_NAME,
+                    HE.POSITION,
+                    HE.EMAIL
+                    FROM HR_GRADE HG
+                    LEFT JOIN HR_EMPLOYEES HE
+                    ON HG.EMP_NO = HE.EMP_NO  
+                    WHERE YEAR = 2022)
+SELECT 
+    SUM(SCORE) AS SCORE,
+    EMP_NO,
+    EMP_NAME,
+    POSITION,
+    EMAIL
+FROM FIND_TOP
+GROUP BY EMP_NO
+ORDER BY SCORE DESC
+LIMIT 1;
+
+------------------------------------------------------------------------------------------------------
+
