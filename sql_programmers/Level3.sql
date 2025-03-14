@@ -65,3 +65,18 @@ GROUP BY
     DEPT_ID
 ORDER BY 
     AVG_SAL DESC;
+
+------------------------------------------------------------------------------------------------------
+
+## 4. 대장균의 크기에 따라 분류하기 1(Lv. 3 / SELECT)
+
+-- CASE WHEN은 SELECT, UPDATE, INSERT, WHERE 문에서 사용할 수 있음. 
+SELECT 
+    ID, 
+    CASE WHEN SIZE_OF_COLONY <= 100 THEN 'LOW'
+         WHEN (SIZE_OF_COLONY > 100) AND (SIZE_OF_COLONY <= 1000) THEN 'MEDIUM'
+         WHEN SIZE_OF_COLONY > 1000 THEN 'HIGH'
+    END AS SIZE
+FROM 
+    ECOLI_DATA
+ORDER BY ID ASC;
