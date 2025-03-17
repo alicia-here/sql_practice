@@ -80,3 +80,53 @@ SELECT
 FROM 
     ECOLI_DATA
 ORDER BY ID ASC;
+
+------------------------------------------------------------------------------------------------------
+
+## 5. 특정 조건을 만족하는 물고기별 수와 최대 길이 구하기 (Lv.3 /GROUP BY)
+
+WITH FISH_NOT_NULL AS (SELECT 
+                        FISH_TYPE,
+                        CASE WHEN LENGTH IS NULL THEN 10
+                        ELSE LENGTH
+                        END AS NEW_LENGTH
+                        FROM FISH_INFO), 
+FISH_AVG AS (SELECT 
+                FISH_TYPE,
+                AVG(LENGTH) AS AVG_LENGTH
+                FROM FISH_INFO
+                GROUP BY FISH_TYPE),
+FISH_TOTAL_INFO AS (SELECT FNN.FISH_TYPE,
+                           FNN.NEW_LENGTH,
+                           FA.AVG_LENGTH
+                        FROM FISH_NOT_NULL FNN
+                        JOIN FISH_AVG FA
+                        ON FNN.FISH_TYPE = FA.FISH_TYPE)
+SELECT 
+    COUNT(*) AS FISH_COUNT,
+    MAX(NEW_LENGTH) AS MAX_LENGTH,
+    FISH_TYPE
+FROM FISH_TOTAL_INFO
+WHERE AVG_LENGTH >= 33
+GROUP BY FISH_TYPE
+ORDER BY FISH_TYPE ASC; 
+
+-- 아래는 리팩토링 코드 (첫 코드가 길어서 COALESCE()를 통한 코드 간소화)
+
+## COALESCE(컬럼명, 대체값) : NULL 값을 다른 값으로 대체할 때 사용하는 함수
+
+WITH FISH_INFO_RENEW AS (
+    SELECT 
+        FISH_TYPE,
+        COALESCE(LENGTH, 10) AS NEW_LENGTH
+    FROM FISH_INFO
+)
+SELECT 
+    FISH_TYPE,
+    COUNT(*) AS FISH_COUNT,
+    MAX(NEW_LENGTH) AS MAX_LENGTH
+FROM FISH_INFO_RENEW
+GROUP BY FISH_TYPE
+HAVING AVG(NEW_LENGTH) >= 33
+ORDER BY FISH_TYPE ASC;
+

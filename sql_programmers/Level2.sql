@@ -136,3 +136,23 @@ FROM
     ITEM_INFO
 WHERE
     RARITY = 'LEGEND';
+
+------------------------------------------------------------------------------------------------------
+
+## 9. 물고기 종류별 잡은 수 구하기(Lv.2 / GROUP BY)
+
+WITH FISH_TOTAL_INFO AS (
+    SELECT 
+        FISH_NAME, 
+        FI.FISH_TYPE
+    FROM FISH_INFO FI
+    JOIN FISH_NAME_INFO FNI
+    ON FI.FISH_TYPE = FNI.FISH_TYPE
+)
+SELECT 
+    COUNT(FISH_TYPE) AS FISH_COUNT,
+    FISH_NAME
+FROM FISH_TOTAL_INFO
+GROUP BY FISH_NAME
+ORDER BY FISH_COUNT DESC;
+
