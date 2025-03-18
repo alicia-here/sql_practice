@@ -50,3 +50,21 @@ WHERE
     ) > 0
 ORDER BY 
     D.ID ASC;
+    
+-------------------------------------------------------------------------------
+
+## 4. 주문량이 많은 아이스크림 (Lv.4 / JOIN)
+-- UNION : 중복된 값 제외
+-- UNION ALL: 중복된 값도 보여줌
+
+WITH ALL_ORDER AS ((SELECT * 
+                    FROM JULY)
+                    UNION
+                    (SELECT * 
+                    FROM FIRST_HALF))
+SELECT 
+    FLAVOR
+FROM ALL_ORDER
+GROUP BY FLAVOR
+ORDER BY SUM(TOTAL_ORDER) DESC
+LIMIT 3;

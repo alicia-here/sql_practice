@@ -156,3 +156,15 @@ FROM FISH_TOTAL_INFO
 GROUP BY FISH_NAME
 ORDER BY FISH_COUNT DESC;
 
+------------------------------------------------------------------------------------------------------
+
+## 10. 성분으로 구분한 아이스크림 총 주문량 (Lv.2 / GROUP BY)
+
+SELECT 
+    II.INGREDIENT_TYPE,
+    SUM(FH.TOTAL_ORDER) AS TOTAL_ORDER
+FROM FIRST_HALF FH
+JOIN ICECREAM_INFO II
+ON FH.FLAVOR = II.FLAVOR 
+GROUP BY II.INGREDIENT_TYPE
+ORDER BY TOTAL_ORDER ASC;
