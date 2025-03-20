@@ -130,3 +130,64 @@ GROUP BY FISH_TYPE
 HAVING AVG(NEW_LENGTH) >= 33
 ORDER BY FISH_TYPE ASC;
 
+------------------------------------------------------------------------------------------------------
+
+## 6. 조건에 맞는 사용자와 총 거래금액 조회하기  (Lv.3 / GROUP BY)
+
+-- HAVING : GROUP BY로 그룹화된 데이터에 조건을 적용할 때 사용하는 절. 
+-- 집계 함수(예: SUM(), COUNT(), AVG() 등)를 이용한 결과에 조건을 걸 때 사용
+
+SELECT 
+    UGU.USER_ID, 
+    UGU.NICKNAME, 
+    SUM(UGB.PRICE) AS PRICE_SUM
+FROM USED_GOODS_BOARD UGB
+JOIN USED_GOODS_USER UGU
+ON UGB.WRITER_ID = UGU.USER_ID
+WHERE UGB.STATUS = 'DONE'
+GROUP BY UGU.USER_ID
+HAVING SUM(UGB.PRICE) >= 700000
+ORDER BY PRICE_SUM ASC;
+
+------------------------------------------------------------------------------------------------------
+
+## 9. 조건에 맞는 사용자 정보 조회하기 (Lv.3 / STRING, DATE)
+
+-- SUBSTRING(문자열, 시작위치, 길이): 문자열에서 일부를 추출하는 함수
+-- CONCAT(문자열1, 문자열2, ...): 여러 문자열을 연결하는 함수
+
+WITH TOTAL_POST AS (SELECT DISTINCT UGU.USER_ID,
+                        UGU.NICKNAME,
+                        UGU.CITY,
+                        UGU.STREET_ADDRESS1, 
+                        UGU.STREET_ADDRESS2,
+                        UGU.TLNO,
+                        COUNT(UGB.BOARD_ID) OVER (PARTITION BY UGB.WRITER_ID) AS POST_COUNT
+                    FROM USED_GOODS_BOARD UGB
+                    JOIN USED_GOODS_USER UGU
+                    ON UGB.WRITER_ID = UGU.USER_ID)
+SELECT USER_ID,
+NICKNAME,
+CONCAT(CITY,' ',STREET_ADDRESS1,' ',STREET_ADDRESS2) AS '전체주소',
+CONCAT(SUBSTRING(TLNO,1,3),'-',SUBSTRING(TLNO,4,4),'-',SUBSTRING(TLNO,8,4)) AS '전화번호'
+FROM TOTAL_POST
+WHERE (POST_COUNT >= 3)
+ORDER BY USER_ID DESC;
+
+------------------------------------------------------------------------------------------------------
+
+## 8. 대장균들의 자식의 수 구하기 (Lv.3 / SELECT)
+
+-- 그냥 JOIN은 INNER JOIN인 것을 유의하기
+
+WITH PARENT_CHILD AS (SELECT 
+                PARENT_ID, 
+                COUNT(PARENT_ID) AS CHILD_COUNT
+            FROM ECOLI_DATA
+            GROUP BY PARENT_ID)
+SELECT 
+    ID,
+    COALESCE(CHILD_COUNT,0) AS CHILD_COUNT 
+FROM ECOLI_DATA ED
+LEFT JOIN PARENT_CHILD PC 
+ON ED.ID = PC.PARENT_ID;
