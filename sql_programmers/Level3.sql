@@ -151,7 +151,7 @@ ORDER BY PRICE_SUM ASC;
 
 ------------------------------------------------------------------------------------------------------
 
-## 9. 조건에 맞는 사용자 정보 조회하기 (Lv.3 / STRING, DATE)
+## 7. 조건에 맞는 사용자 정보 조회하기 (Lv.3 / STRING, DATE)
 
 -- SUBSTRING(문자열, 시작위치, 길이): 문자열에서 일부를 추출하는 함수
 -- CONCAT(문자열1, 문자열2, ...): 여러 문자열을 연결하는 함수
@@ -191,3 +191,19 @@ SELECT
 FROM ECOLI_DATA ED
 LEFT JOIN PARENT_CHILD PC 
 ON ED.ID = PC.PARENT_ID;
+
+------------------------------------------------------------------------------------------------------
+
+## 9. 즐겨찾기가 가장 많은 식당 정보 출력하기 (Lv.3 / GROUP BY)
+
+SELECT 
+    FOOD_TYPE,
+    REST_ID, 
+    REST_NAME,
+    FAVORITES
+FROM REST_INFO 
+WHERE (FOOD_TYPE, FAVORITES) IN (
+    SELECT FOOD_TYPE, MAX(FAVORITES) 
+    FROM REST_INFO 
+    GROUP BY FOOD_TYPE)
+ORDER BY FOOD_TYPE DESC;
