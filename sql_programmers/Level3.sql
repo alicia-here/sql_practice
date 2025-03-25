@@ -207,3 +207,41 @@ WHERE (FOOD_TYPE, FAVORITES) IN (
     FROM REST_INFO 
     GROUP BY FOOD_TYPE)
 ORDER BY FOOD_TYPE DESC;
+
+------------------------------------------------------------------------------------------------------
+
+10. 없어진 기록 찾기 (Lv.3 / JOIN)
+
+WITH MISSING_INFO AS (SELECT 
+                    AO.ANIMAL_ID,
+                    AO.NAME, 
+                    AI.DATETIME AS INTAKE_DATE, 
+                    AO.DATETIME AS OUT_DATE
+                   FROM ANIMAL_OUTS AO
+                   LEFT JOIN ANIMAL_INS AI
+                   ON AI.ANIMAL_ID = AO.ANIMAL_ID)
+SELECT 
+    ANIMAL_ID, 
+    NAME
+FROM MISSING_INFO
+WHERE INTAKE_DATE IS NULL
+ORDER BY ANIMAL_ID, NAME ASC;
+
+------------------------------------------------------------------------------------------------------
+
+11. 있었는데요 없었습니다 (Lv.3 JOIN)
+
+WITH DATE_INFO AS (SELECT 
+                    AI.ANIMAL_ID,
+                    AI.NAME,
+                    AI.DATETIME AS INTAKE_DATE,
+                    AO.DATETIME AS OUT_DATE
+                   FROM ANIMAL_INS AI
+                   LEFT JOIN ANIMAL_OUTS AO
+                   ON AI.ANIMAL_ID = AO.ANIMAL_ID)
+SELECT 
+    ANIMAL_ID,
+    NAME
+FROM DATE_INFO
+WHERE INTAKE_DATE > OUT_DATE
+ORDER BY INTAKE_DATE ASC;
