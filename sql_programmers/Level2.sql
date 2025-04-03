@@ -171,7 +171,7 @@ ORDER BY TOTAL_ORDER ASC;
 
 ------------------------------------------------------------------------------------------------------
 
-## 노선별 평균 역 사이 거리 조회하기 (Lv.2 / GROUP BY) 
+## 11. 노선별 평균 역 사이 거리 조회하기 (Lv.2 / GROUP BY) 
 SELECT 
     ROUTE,
     CONCAT(ROUND(SUM(D_BETWEEN_DIST),1),'km') AS TOTAL_DISTANCE,
@@ -179,3 +179,18 @@ SELECT
 FROM SUBWAY_DISTANCE
 GROUP BY ROUTE
 ORDER BY SUM(D_BETWEEN_DIST) DESC;
+
+------------------------------------------------------------------------------------------------------
+
+## 12. ROOT 아이템 구하기 (IS NULL/Lv.2)
+-- ROOT 아이템을 찾아 아이템 ID(ITEM_ID), 아이템 명(ITEM_NAME)을 출력하는 SQL문
+-- 결과는 아이템 ID를 기준으로 오름차순
+
+SELECT 
+    IT.ITEM_ID,
+    II.ITEM_NAME 
+FROM ITEM_INFO II
+LEFT JOIN ITEM_TREE IT
+ON II.ITEM_ID = IT.ITEM_ID
+WHERE IT.PARENT_ITEM_ID IS NULL
+ORDER BY ITEM_ID ASC;

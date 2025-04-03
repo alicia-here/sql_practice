@@ -229,7 +229,7 @@ ORDER BY ANIMAL_ID, NAME ASC;
 
 ------------------------------------------------------------------------------------------------------
 
-11. 있었는데요 없었습니다 (Lv.3 JOIN)
+## 11. 있었는데요 없었습니다 (Lv.3 JOIN)
 
 WITH DATE_INFO AS (SELECT 
                     AI.ANIMAL_ID,
@@ -245,3 +245,21 @@ SELECT
 FROM DATE_INFO
 WHERE INTAKE_DATE > OUT_DATE
 ORDER BY INTAKE_DATE ASC;
+
+------------------------------------------------------------------------------------------------------
+
+12. 자동차 대여 기록에서 대여중/대여 가능 여부 구분하기(Lv.3/GROUP BY)
+
+SELECT 
+    CAR_ID,
+    CASE WHEN 
+        MAX(CASE WHEN   
+            (START_DATE <= '2022-10-16 00:00:00') AND (END_DATE >= '2022-10-16 00:00:00') THEN 1 ELSE 0 END
+           ) = 1 THEN '대여중' ELSE '대여 가능'
+    END AS 'AVAILABILITY' 
+FROM 
+    CAR_RENTAL_COMPANY_RENTAL_HISTORY
+GROUP BY 
+    CAR_ID
+ORDER BY 
+    CAR_ID DESC;

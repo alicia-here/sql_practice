@@ -68,3 +68,76 @@ FROM ALL_ORDER
 GROUP BY FLAVOR
 ORDER BY SUM(TOTAL_ORDER) DESC
 LIMIT 3;
+
+-------------------------------------------------------------------------------
+
+## 언어별 개발자 분류하기 (Lv.4 / GROUP BY)
+
+-- 첫시도. 다소 직관적이지 않은 코드 
+WITH CODE_INFO AS (SELECT
+                            * 
+                         FROM SKILLCODES
+                         WHERE (NAME = 'C#') OR
+                            (NAME = 'Python') OR 
+                            (CATEGORY = 'Front End'))
+SELECT 
+    CASE 
+        WHEN 
+            (SKILL_CODE & (SELECT CODE FROM CODE_INFO WHERE NAME = 'Python')) > 0 
+            AND (SKILL_CODE & (SELECT SUM(CODE) FROM CODE_INFO WHERE CATEGORY = 'Front End')) > 0 THEN 'A'
+        WHEN (SKILL_CODE & (SELECT CODE FROM CODE_INFO WHERE NAME = 'C#')) > 0 THEN 'B'
+        WHEN (SKILL_CODE & (SELECT SUM(CODE) FROM CODE_INFO WHERE CATEGORY = 'Front End')) > 0 THEN 'C'    
+    END AS GRADE, 
+    ID, 
+    EMAIL
+FROM DEVELOPERS
+WHERE (SKILL_CODE & (SELECT CODE FROM CODE_INFO WHERE NAME = 'Python')) > 0 
+    OR (SKILL_CODE & (SELECT CODE FROM CODE_INFO WHERE NAME = 'C#')) > 0
+    OR (SKILL_CODE & (SELECT SUM(CODE) FROM CODE_INFO WHERE CATEGORY = 'Front End')) > 0
+ORDER BY GRADE, ID ASC;
+
+-- 길이는 비교적 길지만 직관적인 코드 (동료 코드 참고)
+WITH A_GRADE AS (
+    SELECT B.ID, 'A' AS GRADE
+    FROM DEVELOPERS B
+    WHERE EXISTS (
+        SELECT 1 FROM SKILLCODES A
+        WHERE (A.CODE & B.SKILL_CODE) != 0 AND A.NAME = 'PYTHON'
+    )
+    AND EXISTS (
+        SELECT 1 FROM SKILLCODES A
+        WHERE (A.CODE & B.SKILL_CODE) != 0 AND A.CATEGORY = 'Front End'
+    )
+),
+B_GRADE AS (
+    SELECT B.ID, 'B' AS GRADE
+    FROM DEVELOPERS B
+    WHERE EXISTS (
+        SELECT 1 FROM SKILLCODES A
+        WHERE (A.CODE & B.SKILL_CODE) != 0 AND A.NAME = 'C#'
+    )
+),
+C_GRADE AS (
+    SELECT B.ID, 'C' AS GRADE
+    FROM DEVELOPERS B
+    WHERE EXISTS (
+        SELECT 1 FROM SKILLCODES A
+        WHERE (A.CODE & B.SKILL_CODE) != 0 AND A.CATEGORY = 'Front End'
+    )
+),
+ALL_GRADES AS (
+    SELECT * FROM A_GRADE
+    UNION
+    SELECT * FROM B_GRADE
+    UNION
+    SELECT * FROM C_GRADE
+)
+
+SELECT 
+    MIN(GRADE) AS GRADE,
+    D.ID,
+    D.EMAIL
+FROM ALL_GRADES G
+JOIN DEVELOPERS D ON G.ID = D.ID
+GROUP BY D.ID, D.EMAIL
+ORDER BY GRADE, D.ID;
