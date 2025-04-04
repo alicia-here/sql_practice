@@ -248,7 +248,7 @@ ORDER BY INTAKE_DATE ASC;
 
 ------------------------------------------------------------------------------------------------------
 
-12. 자동차 대여 기록에서 대여중/대여 가능 여부 구분하기(Lv.3/GROUP BY)
+## 12. 자동차 대여 기록에서 대여중/대여 가능 여부 구분하기(Lv.3/GROUP BY)
 
 SELECT 
     CAR_ID,
@@ -263,3 +263,22 @@ GROUP BY
     CAR_ID
 ORDER BY 
     CAR_ID DESC;
+
+------------------------------------------------------------------------------------------------------
+
+## 13. 대여 기록이 존재하는 자동차 리스트 구하기 (Lv.3 / STRING, DATE)
+
+WITH RENTAL_INFO AS (SELECT 
+                        CRCC.CAR_ID, 
+                        CRCC.CAR_TYPE,
+                        CRCRH.START_DATE
+                    FROM CAR_RENTAL_COMPANY_RENTAL_HISTORY CRCRH 
+                    LEFT JOIN CAR_RENTAL_COMPANY_CAR CRCC
+                    ON CRCC.CAR_ID = CRCRH.CAR_ID
+                    WHERE (CRCC.CAR_TYPE = '세단') AND (MONTH(CRCRH.START_DATE) = 10))
+SELECT 
+    DISTINCT(CAR_ID)
+FROM RENTAL_INFO
+ORDER BY CAR_ID DESC;
+    
+                    

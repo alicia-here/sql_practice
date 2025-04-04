@@ -71,7 +71,7 @@ LIMIT 3;
 
 -------------------------------------------------------------------------------
 
-## 언어별 개발자 분류하기 (Lv.4 / GROUP BY)
+## 5. 언어별 개발자 분류하기 (Lv.4 / GROUP BY)
 
 -- 첫시도. 다소 직관적이지 않은 코드 
 WITH CODE_INFO AS (SELECT
@@ -141,3 +141,34 @@ FROM ALL_GRADES G
 JOIN DEVELOPERS D ON G.ID = D.ID
 GROUP BY D.ID, D.EMAIL
 ORDER BY GRADE, D.ID;
+
+-------------------------------------------------------------------------------
+
+## 6. 연간 평가점수에 해당하는 평가 등급 및 성과급 조회하기(LV.4 / GROUP BY)
+
+WITH GRADE_INFO AS (SELECT 
+            HE.EMP_NO, 
+            HE.EMP_NAME, 
+            HE.SAL,
+            CASE WHEN (AVG(HG.SCORE) >= 96) THEN 'S'
+                 WHEN (AVG(HG.SCORE) >= 90) AND (AVG(HG.SCORE) < 96) THEN 'A'
+                 WHEN (AVG(HG.SCORE) >= 80) AND (AVG(HG.SCORE) < 90) THEN 'B'
+                 ELSE 'C'
+            END AS 'GRADE'   
+        FROM 
+            HR_EMPLOYEES HE
+        LEFT JOIN 
+            HR_GRADE HG
+        ON HE.EMP_NO = HG.EMP_NO
+        GROUP BY HE.EMP_NO)
+SELECT 
+    EMP_NO, 
+    EMP_NAME,
+    GRADE,
+    CASE WHEN GRADE = 'S' THEN SAL*0.2
+         WHEN GRADE = 'A' THEN SAL*0.15
+         WHEN GRADE = 'B' THEN SAL*0.1
+         WHEN GRADE = 'C' THEN SAL*0
+    END AS 'BONUS'
+FROM GRADE_INFO
+ORDER BY EMP_NO ASC;    
