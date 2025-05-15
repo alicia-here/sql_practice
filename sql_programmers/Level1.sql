@@ -208,7 +208,7 @@ ORDER BY
 
 ------------------------------------------------------------------------------------------------------
 
-## 조건에 맞는 사원 정보 조회하기 (Lv.1 / GROUP BY)
+## 17. 조건에 맞는 사원 정보 조회하기 (Lv.1 / GROUP BY)
 
 WITH FIND_TOP AS (SELECT 
                     HG.EMP_NO,
@@ -234,3 +234,26 @@ LIMIT 1;
 
 ------------------------------------------------------------------------------------------------------
 
+## 18. 자동차 대여 기록에서 장기/단기 대여 구분하기 (Lv.1 / String, Date)
+
+## DATEDIFF(date1, date2) : 두 날짜 간의 일(day) 차이를 정수로 반환. 음수인 경우 - 부호가 붙음
+## TIMEDIFF(time1, time2) : 두 시간 또는 날짜-시간 간의 시:분:초 (HH:MM:SS) 차이를 반환. 음수인 경우 - 부호가 붙음
+## DATEDIFF의 포함일 > 당일에 빌리고 당일에 반납해도 하루 빌린 것임.
+
+SELECT 
+    HISTORY_ID,
+    CAR_ID,
+    DATE_FORMAT(START_DATE, '%Y-%m-%d') AS START_DATE,
+    DATE_FORMAT(END_DATE, '%Y-%m-%d') AS END_DATE,
+    CASE 
+        WHEN DATEDIFF(END_DATE, START_DATE) >= 29 THEN '장기 대여'
+        ELSE '단기 대여' 
+    END AS RENT_TYPE
+FROM 
+    CAR_RENTAL_COMPANY_RENTAL_HISTORY
+WHERE 
+    YEAR(START_DATE) = 2022
+    AND MONTH(START_DATE) = 9
+ORDER BY HISTORY_ID DESC;
+
+------------------------------------------------------------------------------------------------------
