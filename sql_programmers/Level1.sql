@@ -282,3 +282,22 @@ ORDER BY HIRE_YMD DESC, DR_NAME ASC;
 
 ------------------------------------------------------------------------------------------------------
 
+## 21. 12세 이하인 여자 환자 목록 출력하기 (Lv.1 / SELECT)
+
+SELECT  
+    PT_NAME, 
+    PT_NO,
+    GEND_CD, 
+    AGE,
+    IFNULL(TLNO,  'NONE') AS TLNO
+FROM PATIENT
+WHERE GEND_CD = 'W' AND AGE <= 12
+ORDER BY AGE DESC, PT_NAME ASC; 
+
+------------------------------------------------------------------------------------------------------
+
+## 22. 조건에 맞는 회원수 구하기 
+
+SELECT COUNT(USER_ID) 
+FROM USER_INFO 
+WHERE (AGE BETWEEN 20 AND 29) AND YEAR(JOINED) = 2021; 
